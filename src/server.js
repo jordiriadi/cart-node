@@ -7,6 +7,7 @@ import 'dotenv/config';
 
 import cartRoutes from './routes/cart.js';
 import checkoutRoutes from './routes/checkout.js';
+import itemControllers from './controllers/item.js';
 
 const app = express()
 const port = 3001
@@ -49,6 +50,7 @@ type Promotion {
 type Query {
   items: [Item]
   promotions: [Promotion]
+  getItems(_id: String): [Item]
 }
 `
 
@@ -57,7 +59,10 @@ const resolvers = {
   Query: {
     items: (obj, args, context) => context.items,
     promotions: (obj, args, context) => context.promotions,
+    getItems: itemControllers.getItems
   },
+  // Mutation: {
+  // }
 };
 
 const executableSchema = makeExecutableSchema({
