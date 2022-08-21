@@ -8,31 +8,18 @@ import 'dotenv/config';
 import cartRoutes from './routes/cart.js';
 import checkoutRoutes from './routes/checkout.js';
 import itemControllers from './controllers/item.js';
+import cartControllers from './controllers/cart.js';
+import checkoutControllers from './controllers/checkout.js'
+import promotionControllers from './controllers/promotion.js'
 
 const app = express()
 const port = 3001
 
-// In-memory data store
-const items = [
-  {id: '120P90', name: 'Google Home', price: 49.99, qty: 10},
-  {id: '43N23P', name: 'MacBook Pro', price: 5399.99, qty: 5},
-  {id: 'A304SD', name: 'Alexa Speaker', price: 109.5, qty: 10},
-  {id: '234234', name: 'Raspberry Pi B', price: 30, qty: 5},
-];
-const promotions = [
-  { item: '43N23P', type: 'freebie', discount: 0, freebieItem: items[3], minItem: 1, multiple: true },
-  { item: '120P90', type: 'freebie', discount: 0, freebieItem: items[0], minItem: 2, multiple: true },
-  { item: 'A304SD', type: 'discount', discount: '10', freebieItem: null, minItem: 3, multiple: false }
-];
-const data = {
-  items,
-  promotions,
-};
-
 // Schema
 const typeDefs = `
 type Item {
-  id: ID!
+  _id: ID!
+  sku: String!
   name: String!
   price: Float!
   qty: Int
@@ -47,22 +34,40 @@ type Promotion {
   freebieItem: Item
 }
 
+type Cart {
+  _id: String!
+}
+
+type CartItem {
+  _id: String!
+  cart: Cart
+  item: Item
+  qty: Int
+}
+
 type Query {
   items: [Item]
   promotions: [Promotion]
-  getItems(_id: String): [Item]
+}
+
+type Mutation {
+  initCart: Cart
+  addItemToCart(cartId: String, itemId: String, qty: Int): CartItem
+  checkout(cartId: String): Float
 }
 `
 
 // Resolver for warriors
 const resolvers = {
   Query: {
-    items: (obj, args, context) => context.items,
-    promotions: (obj, args, context) => context.promotions,
-    getItems: itemControllers.getItems
+    items: itemControllers.getItems,
+    promotions: promotionControllers.getPromotions,
   },
-  // Mutation: {
-  // }
+  Mutation: {
+    initCart: cartControllers.initCart,
+    addItemToCart: cartControllers.addItemToCart,
+    checkout: checkoutControllers.checkout,
+  }
 };
 
 const executableSchema = makeExecutableSchema({
@@ -79,7 +84,6 @@ app.use(
   '/graphql',
   graphqlHTTP({
     schema: executableSchema,
-    context: data,
     graphiql: true,
   })
 )

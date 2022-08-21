@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import { composeMongoose } from 'graphql-compose-mongoose';
-import { schemaComposer } from 'graphql-compose';
 
 const Schema = mongoose.Schema;
 
