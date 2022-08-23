@@ -30,7 +30,6 @@ const checkout = async (req, res) => {
 
       applyPromotion({ promotion, cartItems, cartItem });
     }
-    // console.log(cartItems.reduce((total, item) => total + item.qty, 0));
 
     res.status(200).json(cartItems);
   } catch (error) {

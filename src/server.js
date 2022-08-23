@@ -32,6 +32,7 @@ type Promotion {
   multiple: Boolean!
   discount: Float
   freebieItem: Item
+  item: Item
 }
 
 type Cart {
@@ -88,9 +89,6 @@ app.use(
   })
 )
 
-app.use('/api/cart', cartRoutes);
-app.use('/api/checkout', checkoutRoutes);
-
 mongoose.connect(process.env.MONGO_URI, {dbName: process.env.MONGO_DB_NAME})
   .then(() => {
     app.listen(port, () => {
@@ -100,3 +98,5 @@ mongoose.connect(process.env.MONGO_URI, {dbName: process.env.MONGO_DB_NAME})
   .catch((err) => {
     console.error(`Error connecting to the database. n${err}`);
   });
+
+export default app;
