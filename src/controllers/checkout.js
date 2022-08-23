@@ -40,4 +40,4 @@ const checkout = async (_obj, { cartId }) => {
   }
 }
 
-export default { checkout };
+export default { checkout, applyPromotion };
