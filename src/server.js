@@ -5,8 +5,6 @@ import { graphqlHTTP } from 'express-graphql'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import 'dotenv/config';
 
-import cartRoutes from './routes/cart.js';
-import checkoutRoutes from './routes/checkout.js';
 import itemControllers from './controllers/item.js';
 import cartControllers from './controllers/cart.js';
 import checkoutControllers from './controllers/checkout.js'
